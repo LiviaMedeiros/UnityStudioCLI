@@ -24,20 +24,20 @@ namespace Unity_Studio
             {
                 if ((serializedText = preloadData.ViewStruct()) == null)
                 {
-                    var str = "PPtr<GameObject> m_GameObject\r\n";
-                    str += "\tint m_FileID = " + m_GameObject.m_FileID + "\r\n";
-                    str += "\tint64 m_PathID = " + m_GameObject.m_PathID + "\r\n";
-                    str += "UInt8 m_Enabled = " + m_Enabled + "\r\n";
-                    str += "PPtr<MonoScript> m_Script\r\n";
-                    str += "\tint m_FileID = " + m_Script.m_FileID + "\r\n";
-                    str += "\tint64 m_PathID = " + m_Script.m_PathID + "\r\n";
-                    str += "string m_Name = \"" + m_Name + "\"\r\n";
+                    var str = "PPtr<GameObject> m_GameObject\n";
+                    str += "\tint m_FileID = " + m_GameObject.m_FileID + "\n";
+                    str += "\tint64 m_PathID = " + m_GameObject.m_PathID + "\n";
+                    str += "UInt8 m_Enabled = " + m_Enabled + "\n";
+                    str += "PPtr<MonoScript> m_Script\n";
+                    str += "\tint m_FileID = " + m_Script.m_FileID + "\n";
+                    str += "\tint64 m_PathID = " + m_Script.m_PathID + "\n";
+                    str += "string m_Name = \"" + m_Name + "\"\n";
                     serializedText = str;
                 }
             }
             else
             {
-                preloadData.extension = ".txt";
+                preloadData.extension = ".snaa";
                 preloadData.Text = m_Name;
             }
         }

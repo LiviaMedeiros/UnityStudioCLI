@@ -101,10 +101,16 @@ namespace Unity_Studio
                 else if (varTypeStr == "float")//float
                 {
                     value = a_Stream.ReadSingle();
+                    if (((float)value % 1) == 0) {
+                        value = String.Format("{0:0.0}",value);
+                    }
                 }
                 else if (varTypeStr == "double")//double
                 {
                     value = a_Stream.ReadDouble();
+                    if (((double)value % 1) == 0) {
+                        value = String.Format("{0:0.0}",value);
+                    }
                 }
                 else if (varTypeStr == "bool")//bool
                 {
@@ -114,7 +120,13 @@ namespace Unity_Studio
                 {
                     append = false;
                     var str = a_Stream.ReadAlignedString(a_Stream.ReadInt32());
-                    sb.AppendFormat("{0}{1} {2} = \"{3}\"\r\n", (new string('\t', level)), varTypeStr, varNameStr, str);
+                    str = str.Replace("\r", "");
+                    str = str.Replace("\n", "\n" + (new string('\t', level + 1)));
+                    if (varNameStr == "data") {
+                        sb.AppendFormat("{0}{2}_{4}: |\n {0}\t{3}\n", (new string('\t', level)), varTypeStr, "MumiWhy", str, (new Random()).Next(1048575));
+                    } else {
+                        sb.AppendFormat("{0}{2}: |\n {0}\t{3}\n", (new string('\t', level)), varTypeStr, varNameStr, str);
+                    }
                     i += 3;//skip
                 }
                 else if (varTypeStr == "Array")//Array
@@ -122,13 +134,13 @@ namespace Unity_Studio
                     append = false;
                     if ((members[i - 1].Flag & 0x4000) != 0)
                         align = true;
-                    sb.AppendFormat("{0}{1} {2}\r\n", (new string('\t', level)), varTypeStr, varNameStr);
+                    //sb.AppendFormat("{0}{1} {2}\r\n", (new string('\t', level)), varTypeStr, varNameStr); // Array Array
                     var size = a_Stream.ReadInt32();
-                    sb.AppendFormat("{0}{1} {2} = {3}\r\n", (new string('\t', level)), "int", "size", size);
+                    //sb.AppendFormat("{0}{1} {2} = {3}\r\n", (new string('\t', level)), "int", "size", size);
                     var array = ReadArray(members, level, i);
                     for (int j = 0; j < size; j++)
                     {
-                        sb.AppendFormat("{0}[{1}]\r\n", (new string('\t', level + 1)), j);
+                        //sb.AppendFormat("{0}[{1}]\r\n", (new string('\t', level + 1)), j);
                         ReadClassStruct(sb, array, a_Stream);
                     }
                     i += array.Count + 1;//skip
@@ -139,8 +151,8 @@ namespace Unity_Studio
                     var size = a_Stream.ReadInt32();
                     a_Stream.ReadBytes(size);
                     i += 2;
-                    sb.AppendFormat("{0}{1} {2}\r\n", (new string('\t', level)), varTypeStr, varNameStr);
-                    sb.AppendFormat("{0}{1} {2} = {3}\r\n", (new string('\t', level)), "int", "size", size);
+                    sb.AppendFormat("{0}{2}\n", (new string('\t', level)), varTypeStr, varNameStr);
+                    //sb.AppendFormat("{0}{1} {2} = {3}\r\n", (new string('\t', level)), "int", "size", size);
                 }
                 else
                 {
@@ -150,10 +162,20 @@ namespace Unity_Studio
                         align = false;
                         SetAlignBefore(members, level, i + 1);
                     }
-                    sb.AppendFormat("{0}{1} {2}\r\n", (new string('\t', level)), varTypeStr, varNameStr);
+                    if (varNameStr == "data") {
+                        sb.AppendFormat("{0}  - {2}:\n", (new string('\t', level - 1)), varTypeStr, "MumiWhy");
+                    } else {
+                        sb.AppendFormat("{0}{2}:\n", (new string('\t', level)), varTypeStr, varNameStr);
+                    }
+                    
                 }
-                if (append)
-                    sb.AppendFormat("{0}{1} {2} = {3}\r\n", (new string('\t', level)), varTypeStr, varNameStr, value);
+                if (append) {
+                    if (varNameStr == "data") {
+                        sb.AppendFormat("{0}{2}_{4}: {3}\n", (new string('\t', level)), varTypeStr, "MumiWhy", value, (new Random()).Next(1048575));
+                    } else {
+                        sb.AppendFormat("{0}{2}: {3}\n", (new string('\t', level)), varTypeStr, varNameStr, value);
+                    }
+                }
                 if (align)
                     a_Stream.AlignStream(4);
             }
