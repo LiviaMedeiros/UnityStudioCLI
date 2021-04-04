@@ -53,7 +53,7 @@ namespace Unity_Studio
             return null;
         }
 
-        public static void ReadClassStruct(StringBuilder sb, List<ClassMember> members, EndianBinaryReader a_Stream)
+        public static void ReadClassStruct(StringBuilder sb, List<ClassMember> members, EndianBinaryReader a_Stream, int MumiCount = 0)
         {
             for (int i = 0; i < members.Count; i++)
             {
@@ -123,7 +123,7 @@ namespace Unity_Studio
                     str = str.Replace("\r", "");
                     str = str.Replace("\n", "\n" + (new string('\t', level + 1)));
                     if (varNameStr == "data") {
-                        sb.AppendFormat("{0}{2}_{4}: |\n {0}\t{3}\n", (new string('\t', level)), varTypeStr, "MumiWhy", str, (new Random()).Next(1048575));
+                        sb.AppendFormat("{0}{2}_{4}: |\n {0}\t{3}\n", (new string('\t', level)), varTypeStr, "MumiWhy", str, MumiCount++);
                     } else {
                         sb.AppendFormat("{0}{2}: |\n {0}\t{3}\n", (new string('\t', level)), varTypeStr, varNameStr, str);
                     }
@@ -141,7 +141,7 @@ namespace Unity_Studio
                     for (int j = 0; j < size; j++)
                     {
                         //sb.AppendFormat("{0}[{1}]\r\n", (new string('\t', level + 1)), j);
-                        ReadClassStruct(sb, array, a_Stream);
+                        ReadClassStruct(sb, array, a_Stream, MumiCount + i + j + 1);
                     }
                     i += array.Count + 1;//skip
                 }
@@ -171,7 +171,7 @@ namespace Unity_Studio
                 }
                 if (append) {
                     if (varNameStr == "data") {
-                        sb.AppendFormat("{0}{2}_{4}: {3}\n", (new string('\t', level)), varTypeStr, "MumiWhy", value, (new Random()).Next(1048575));
+                        sb.AppendFormat("{0}{2}_{4}: {3}\n", (new string('\t', level)), varTypeStr, "MumiWhy", value, MumiCount++);
                     } else {
                         sb.AppendFormat("{0}{2}: {3}\n", (new string('\t', level)), varTypeStr, varNameStr, value);
                     }

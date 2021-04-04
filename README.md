@@ -12,10 +12,10 @@ Unity Studio is a tool for exploring, extracting and exporting assets from Unity
 
 ## Requirements 
 
-Currently tested in macOS only (10.12.6, 10.13.6) .
+Currently tested in gentoo 2.7 linux/amd64/17.1/no-multilib with mono 6.12.0.122.</br>
+mono asks for `CONFIG_CRYPTO_DH` but it shouldn't be necessary.
 
-Install [Mono package 5.4.1.6](https://www.mono-project.com/download/) first.
-
+Also it has horrible memory leaks so make sure that OOM Killer is prepared.
 
 ## Usage
 
